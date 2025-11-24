@@ -230,15 +230,6 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-Your Name
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
 
 ## 🙏 Acknowledgments
 
@@ -262,14 +253,6 @@ For support, email your.email@example.com or open an issue in the repository.
 - [ ] Add multi-language support
 - [ ] Create mobile app version
 
-## 📊 Project Stats
-
-- **Lines of Code**: ~5000+
-- **Accuracy**: Optimized for healthcare predictions
-- **Response Time**: < 2s
-- **Mobile Score**: 95/100
-
----
 
 **Made with ❤️ using Django and Machine Learning**
 
