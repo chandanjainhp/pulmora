@@ -1,0 +1,642 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lung Cancer Prediction Form - Enter your symptoms">
+    <title>Prediction - LC Prediction</title>
+    <style>
+        body{
+            background-image: url("{%static 'images/lung-cancer-image.jpg' %}");
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        ul{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #2874A6; /* Blue navbar */
+            font-size: 25px;
+            letter-spacing: 1px;
+         }
+         li{
+            float: right;
+         }
+         li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 16px 20px;
+            text-decoration: none;
+         }
+         li a:hover{
+            background-color: #1A5276;
+         }
+        li a:active{
+            background-color: rgb(20, 48, 204);
+         }
+
+         .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+         }
+
+         .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 30px;
+         }
+
+         .form-title {
+            text-align: center;
+            color: #2874A6;
+            margin-bottom: 30px;
+            font-size: 32px;
+         }
+
+         .form-group {
+            margin-bottom: 20px;
+         }
+
+         .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2874A6;
+            font-size: 16px;
+         }
+
+         .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #BDC3C7;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+         }
+
+         .form-control:focus {
+            border-color: #2874A6;
+            outline: none;
+            box-shadow: 0 0 5px rgba(40, 116, 166, 0.5);
+         }
+
+         .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+         }
+
+         .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: #2C3E50;
+         }
+
+         .radio-label input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+         }
+
+         .range-container {
+            display: flex;
+            align-items: center;
+         }
+
+         .range-input {
+            flex-grow: 1;
+            margin-right: 10px;
+         }
+
+         .range-value {
+            width: 30px;
+            text-align: center;
+            font-weight: bold;
+            color: #2874A6;
+         }
+
+         .btn-submit {
+            background-color: #2874A6;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s, transform 0.2s;
+         }
+
+         .btn-submit:hover {
+            background-color: #1A5276;
+            transform: translateY(-2px);
+         }
+
+         /* Results styles */
+         .results-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            margin-bottom: 30px;
+         }
+
+         .results-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+         }
+
+         .results-title {
+            text-align: center;
+            color: #2874A6;
+            margin-bottom: 30px;
+            font-size: 28px;
+         }
+
+         .result-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+         }
+
+         .result-item h3 {
+            color: #2874A6;
+            margin-bottom: 10px;
+            font-size: 20px;
+         }
+
+         .diagnosis {
+            font-size: 24px;
+            font-weight: bold;
+         }
+
+         .high-risk {
+            color: #E74C3C;
+         }
+
+         .medium-risk {
+            color: #F39C12;
+         }
+
+         .low-risk {
+            color: #27AE60;
+         }
+
+         .premium {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2874A6;
+         }
+
+         .doctor {
+            font-weight: bold;
+         }
+
+         .pdf-form {
+            margin-top: 30px;
+         }
+
+         .btn-generate-pdf {
+            background-color: #E74C3C;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.2s;
+         }
+
+         .btn-generate-pdf:hover {
+            background-color: #C0392B;
+            transform: translateY(-2px);
+         }
+
+         mess{
+            text-align: center;
+            font-weight: bold;
+            color: #E74C3C;
+            font-size: 24px;
+            margin: 20px 0;
+            display: block;
+         }
+
+         .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+         }
+
+         /* Mobile Responsive Styles */
+         @media (max-width: 768px) {
+            ul {
+              font-size: 16px;
+            }
+            
+            li a {
+              padding: 12px 15px;
+            }
+            
+            .card, .results-card {
+              width: 95%;
+              padding: 20px;
+            }
+            
+            .form-title, .results-title {
+              font-size: 24px;
+            }
+            
+            .form-grid {
+              grid-template-columns: 1fr;
+              gap: 15px;
+            }
+            
+            .form-label {
+              font-size: 14px;
+            }
+            
+            .btn-submit, .btn-generate-pdf {
+              font-size: 16px;
+              padding: 10px 20px;
+            }
+            
+            .diagnosis {
+              font-size: 20px;
+            }
+            
+            .premium {
+              font-size: 20px;
+            }
+         }
+
+         @media (max-width: 480px) {
+            ul {
+              font-size: 12px;
+            }
+            
+            li a {
+              padding: 10px 8px;
+            }
+            
+            .card, .results-card {
+              width: 98%;
+              padding: 15px;
+            }
+            
+            .form-title, .results-title {
+              font-size: 20px;
+            }
+            
+            .form-label {
+              font-size: 13px;
+            }
+            
+            .form-control {
+              padding: 8px 12px;
+              font-size: 14px;
+            }
+            
+            .radio-group {
+              flex-direction: column;
+              gap: 10px;
+            }
+            
+            .range-value {
+              min-width: 25px;
+            }
+            
+            .result-item h3 {
+              font-size: 18px;
+            }
+         }
+
+         @media (max-width: 360px) {
+            ul {
+              font-size: 11px;
+            }
+            
+            li a {
+              padding: 8px 5px;
+            }
+            
+            .form-title, .results-title {
+              font-size: 18px;
+            }
+         }
+    </style>
+</head>
+<body>
+<ul>
+    <li><a class="active" href="home">LogOut</a></li>
+</ul>
+
+{% if show_results %}
+<div class="results-container">
+    <div class="results-card">
+        <h2 class="results-title">Prediction Results</h2>
+
+        <div class="result-item">
+            <h3>Diagnosis:</h3>
+            <p class="diagnosis {% if diagnosis == 'Positive' %}high-risk{% elif diagnosis == 'Medium' %}medium-risk{% else %}low-risk{% endif %}">
+                {{ diagnosis }}
+            </p>
+        </div>
+
+        <div class="result-item">
+            <h3>Insurance Premium:</h3>
+            <p class="premium">₹{{ premium_amount }}/month</p>
+        </div>
+
+        <div class="result-item">
+            <h3>Doctor Recommendation:</h3>
+            <p class="doctor">{{ doctor.name }} ({{ doctor.specialty }})</p>
+            <p>{{ doctor.hospital }}</p>
+        </div>
+
+        <form action="predict" method="post" class="pdf-form">
+            {% csrf_token %}
+            <input type="hidden" name="Age" value="{{ age }}">
+            <input type="hidden" name="Gender" value="{{ gender }}">
+            <input type="hidden" name="Air Pollution" value="{% if air_pollution %}{{ air_pollution }}{% else %}4{% endif %}">
+            <input type="hidden" name="Alcohol use" value="{% if alcohol_use %}{{ alcohol_use }}{% else %}4{% endif %}">
+            <input type="hidden" name="Dust Allergy" value="{% if dust_allergy %}{{ dust_allergy }}{% else %}4{% endif %}">
+            <input type="hidden" name="OccuPational Hazards" value="{% if occupational_hazards %}{{ occupational_hazards }}{% else %}4{% endif %}">
+            <input type="hidden" name="Genetic Risk" value="{% if genetic_risk %}{{ genetic_risk }}{% else %}4{% endif %}">
+            <input type="hidden" name="chronic Lung Disease" value="{% if chronic_lung_disease %}{{ chronic_lung_disease }}{% else %}4{% endif %}">
+            <input type="hidden" name="Balanced Diet" value="{% if balanced_diet %}{{ balanced_diet }}{% else %}4{% endif %}">
+            <input type="hidden" name="Obesity" value="{% if obesity %}{{ obesity }}{% else %}4{% endif %}">
+            <input type="hidden" name="Smoking" value="{% if smoking %}{{ smoking }}{% else %}4{% endif %}">
+            <input type="hidden" name="Passive Smoker" value="{% if passive_smoker %}{{ passive_smoker }}{% else %}4{% endif %}">
+            <input type="hidden" name="Chest Pain" value="{% if chest_pain %}{{ chest_pain }}{% else %}4{% endif %}">
+            <input type="hidden" name="Coughing of Blood" value="{% if coughing_of_blood %}{{ coughing_of_blood }}{% else %}4{% endif %}">
+            <input type="hidden" name="Fatigue" value="{% if fatigue %}{{ fatigue }}{% else %}4{% endif %}">
+            <input type="hidden" name="Weight Loss" value="{% if weight_loss %}{{ weight_loss }}{% else %}4{% endif %}">
+            <input type="hidden" name="Shortness of Breath" value="{% if shortness_of_breath %}{{ shortness_of_breath }}{% else %}4{% endif %}">
+            <input type="hidden" name="Wheezing" value="{% if wheezing %}{{ wheezing }}{% else %}4{% endif %}">
+            <input type="hidden" name="Swallowing Difficulty" value="{% if swallowing_difficulty %}{{ swallowing_difficulty }}{% else %}4{% endif %}">
+            <input type="hidden" name="Clubbing of Finger Nails" value="{% if clubbing_of_finger_nails %}{{ clubbing_of_finger_nails }}{% else %}4{% endif %}">
+            <input type="hidden" name="Frequent Cold" value="{% if frequent_cold %}{{ frequent_cold }}{% else %}4{% endif %}">
+            <input type="hidden" name="Dry Cough" value="{% if dry_cough %}{{ dry_cough }}{% else %}4{% endif %}">
+            <input type="hidden" name="Snoring" value="{% if snoring %}{{ snoring }}{% else %}4{% endif %}">
+            <input type="hidden" name="generate_pdf" value="true">
+            <button type="submit" class="btn-generate-pdf">Generate Detailed Report (PDF)</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<div class="container">
+    <div class="card">
+        <h2 class="form-title">Lung Cancer Prediction</h2>
+
+        <form action="predict" method="post" id="predictionForm">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Age" class="form-label">Age :</label>
+                    <input type="number" id="Age" name="Age" class="form-control" min="1" required oninput="validateAge(this)">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Gender :</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" id="gender-male" name="Gender" value="1" required checked>
+                            <span>Male</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" id="gender-female" name="Gender" value="2">
+                            <span>Female</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Air Pollution" class="form-label">Air pollution On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Air Pollution" name="Air Pollution" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Air Pollution-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Alcohol use" class="form-label">Alcohol use On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Alcohol use" name="Alcohol use" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Alcohol use-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Dust Allergy" class="form-label">Dust Allergy On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Dust Allergy" name="Dust Allergy" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Dust Allergy-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="OccuPational Hazards" class="form-label">OccuPational Hazards On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="OccuPational Hazards" name="OccuPational Hazards" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="OccuPational Hazards-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Genetic Risk" class="form-label">Genetic Risk On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Genetic Risk" name="Genetic Risk" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Genetic Risk-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="chronic Lung Disease" class="form-label">Chronic Lung Disease On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="chronic Lung Disease" name="chronic Lung Disease" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="chronic Lung Disease-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Balanced Diet" class="form-label">Balanced Diet On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Balanced Diet" name="Balanced Diet" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Balanced Diet-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Obesity" class="form-label">Obesity On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Obesity" name="Obesity" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Obesity-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Smoking" class="form-label">Smoking On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Smoking" name="Smoking" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Smoking-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Passive Smoker" class="form-label">Passive Smoker On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Passive Smoker" name="Passive Smoker" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Passive Smoker-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Chest Pain" class="form-label">Chest Pain On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Chest Pain" name="Chest Pain" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Chest Pain-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Coughing of Blood" class="form-label">Coughing of Blood On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Coughing of Blood" name="Coughing of Blood" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Coughing of Blood-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Fatigue" class="form-label">Fatigue On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Fatigue" name="Fatigue" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Fatigue-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Weight Loss" class="form-label">Weight Loss On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Weight Loss" name="Weight Loss" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Weight Loss-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Shortness of Breath" class="form-label">Shortness of Breath On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Shortness of Breath" name="Shortness of Breath" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Shortness of Breath-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Wheezing" class="form-label">Wheezing On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Wheezing" name="Wheezing" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Wheezing-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Swallowing Difficulty" class="form-label">Swallowing Difficulty On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Swallowing Difficulty" name="Swallowing Difficulty" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Swallowing Difficulty-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Clubbing of Finger Nails" class="form-label">Clubbing of Finger Nails On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Clubbing of Finger Nails" name="Clubbing of Finger Nails" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Clubbing of Finger Nails-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Frequent Cold" class="form-label">Frequent Cold On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Frequent Cold" name="Frequent Cold" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Frequent Cold-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Dry Cough" class="form-label">Dry Cough On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Dry Cough" name="Dry Cough" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Dry Cough-value">4</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Snoring" class="form-label">Snoring On the Scale of 1 to 8 :</label>
+                    <div class="range-container">
+                        <input type="range" id="Snoring" name="Snoring" class="range-input" min="1" max="8" value="4" required oninput="updateRangeValue(this)">
+                        <span class="range-value" id="Snoring-value">4</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Predict</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Function to update the range value display
+    function updateRangeValue(rangeInput) {
+        const valueDisplay = document.getElementById(rangeInput.id + '-value');
+        if (valueDisplay) {
+            valueDisplay.textContent = rangeInput.value;
+        }
+    }
+
+    // Function to validate age (prevent negative values)
+    function validateAge(input) {
+        if (input.value < 1) {
+            input.value = 1;
+            alert("Age cannot be negative or zero. Minimum age is 1.");
+        }
+    }
+
+    // Initialize all range values on page load
+    window.onload = function() {
+        const rangeInputs = document.querySelectorAll('input[type="range"]');
+        rangeInputs.forEach(function(input) {
+            updateRangeValue(input);
+        });
+    };
+</script>
+
+</body>
+</html>

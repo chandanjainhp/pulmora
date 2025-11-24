@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lung Cancer Prediction - Smart and Easy Health Assessment">
+    <title>LC Prediction - Home</title>
+    <style>
+        body{
+            background-image: url("{%static 'images/lung-cancer-image.jpg' %}");
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        ul{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #2874A6; /* Changed to blue color */
+            font-size: 25px;
+            letter-spacing: 1px;
+         }
+         li{
+            float: right;
+         }
+         li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 16px 20px;
+            text-decoration: none;
+         }
+         li a:hover{
+            background-color: #111;
+         }
+        li a:active{
+            background-color: rgb(20, 48, 204);
+         }
+         h2{
+            color: red;
+            text-shadow: 4px 2px 5px red;
+            font-size: 50px;
+            margin-bottom: 10px;
+          }
+          p{
+            color: white;
+            font-size: 30px;
+            margin: 10px 0;
+          }
+          p2{
+            color: white;
+            font-size: 100px;
+          }
+          tit{
+            color: white;
+          }
+
+          .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            padding: 20px;
+          }
+
+          .card {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+          }
+
+          .accuracy {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 20px;
+          }
+
+          .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+          }
+
+          .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+          }
+
+          .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+          }
+
+          /* Mobile Responsive Styles */
+          @media (max-width: 768px) {
+            ul {
+              font-size: 16px;
+            }
+            
+            li a {
+              padding: 12px 15px;
+            }
+            
+            h2 {
+              font-size: 32px;
+              text-shadow: 2px 1px 3px red;
+            }
+            
+            p {
+              font-size: 20px;
+            }
+            
+            .card {
+              width: 95%;
+              padding: 25px;
+            }
+            
+            .btn {
+              padding: 12px 20px;
+              font-size: 16px;
+            }
+            
+            .btn-container {
+              flex-direction: column;
+              gap: 15px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            ul {
+              font-size: 14px;
+            }
+            
+            li a {
+              padding: 10px 8px;
+            }
+            
+            h2 {
+              font-size: 24px;
+            }
+            
+            p {
+              font-size: 16px;
+            }
+            
+            .card {
+              padding: 20px;
+            }
+          }
+
+    </style>
+</head>
+<body>
+<ul>
+    <li><a class="active" href="signup">Create an Account</a></li>
+    <li><a class="active" href="signin">Sign In</a></li>
+    <li style="float:left"><a href=""><tit><b><i>LC Cancer Prediction</i></b></tit></a></li>
+</ul>
+
+<div class="container">
+    <div class="card">
+        <h2>Get to Know About Your Health</h2>
+        <p>Smarter and Easier to Predict Lung Cancer<br>With Symptoms, We Predict the Cancer</p>
+
+        <div class="accuracy">
+            <h2>With an insurance premium</h2>
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>

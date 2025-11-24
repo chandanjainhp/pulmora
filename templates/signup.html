@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create an account for Lung Cancer Prediction System">
+    <title>Sign Up - LC Prediction</title>
+    <style>
+        body{
+            background-image: url("{%static 'images/lung-cancer-image.jpg' %}");
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        ul{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #2874A6; /* Blue navbar */
+            font-size: 25px;
+            letter-spacing: 1px;
+         }
+         li{
+            float: right;
+         }
+         li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 16px 20px;
+            text-decoration: none;
+         }
+         li a:hover{
+            background-color: #1A5276;
+         }
+        li a:active{
+            background-color: rgb(20, 48, 204);
+         }
+
+         .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            padding: 20px;
+         }
+
+         .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            width: 80%;
+            max-width: 600px;
+         }
+
+         .form-title {
+            text-align: center;
+            color: #2874A6;
+            margin-bottom: 30px;
+            font-size: 32px;
+         }
+
+         .form-group {
+            margin-bottom: 25px;
+         }
+
+         .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2874A6;
+            font-size: 18px;
+         }
+
+         .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #BDC3C7;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+         }
+
+         .form-control:focus {
+            border-color: #2874A6;
+            outline: none;
+            box-shadow: 0 0 5px rgba(40, 116, 166, 0.5);
+         }
+
+         .btn-submit {
+            background-color: #2874A6;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.2s;
+         }
+
+         .btn-submit:hover {
+            background-color: #1A5276;
+            transform: translateY(-2px);
+         }
+
+         mess{
+            text-align: center;
+            font-weight: bold;
+            color: #E74C3C;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: block;
+         }
+
+         /* Mobile Responsive Styles */
+         @media (max-width: 768px) {
+            ul {
+              font-size: 16px;
+            }
+            
+            li a {
+              padding: 12px 15px;
+            }
+            
+            .card {
+              width: 90%;
+              padding: 30px;
+            }
+            
+            .form-title {
+              font-size: 28px;
+            }
+         }
+
+         @media (max-width: 480px) {
+            ul {
+              font-size: 14px;
+            }
+            
+            li a {
+              padding: 10px 8px;
+            }
+            
+            .card {
+              width: 95%;
+              padding: 20px;
+            }
+            
+            .form-title {
+              font-size: 24px;
+            }
+            
+            .form-label {
+              font-size: 16px;
+            }
+            
+            .btn-submit {
+              font-size: 16px;
+              padding: 10px 20px;
+            }
+         }
+    </style>
+</head>
+<body>
+<ul>
+    <li><a class="active" href="signup">Create an Account</a></li>
+    <li><a class="active" href="signin">Sign In</a></li>
+    <li style="float:left"><a href="home"><tit><b><i>LC Cancer Prediction</i></b></tit></a></li>
+</ul>
+
+<div class="container">
+    <div class="card">
+        <h2 class="form-title">Create an Account</h2>
+
+        <mess>
+            {% for message in messages %}
+            <div>{{message}}</div>
+            {% endfor %}
+        </mess>
+
+        <form action="signup" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="first_name" class="form-label">First Name :</label>
+                <input type="text" id="first_name" name="first_name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="last_name" class="form-label">Last Name :</label>
+                <input type="text" id="last_name" name="last_name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="username" class="form-label">Username :</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email :</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password1" class="form-label">Password :</label>
+                <input type="password" id="password1" name="password1" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password2" class="form-label">Re-Enter Password :</label>
+                <input type="password" id="password2" name="password2" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Sign Up</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+LUNG CANCER PREDICTION APPLICATION FLOWCHART
+=======================================
+
+1. START
+   |
+   v
+2. HOME PAGE
+   |
+   +----> User not logged in ----> SIGN UP PAGE or SIGN IN PAGE
+   |                                |
+   |                                v
+   |                             CREATE ACCOUNT or AUTHENTICATE
+   |                                |
+   |                                v
+   +----> User logged in -----> PREDICTION FORM
+           |
+           v
+3. FILL PREDICTION FORM
+   - Age
+   - Gender (Male/Female)
+   - Air Pollution (Scale 1-8)
+   - Alcohol Use (Scale 1-8)
+   - Dust Allergy (Scale 1-8)
+   - Occupational Hazards (Scale 1-8)
+   - Genetic Risk (Scale 1-8)
+   - Chronic Lung Disease (Scale 1-8)
+   - Balanced Diet (Scale 1-8)
+   - Obesity (Scale 1-8)
+   - Smoking (Scale 1-8)
+   - Passive Smoker (Scale 1-8)
+   - Chest Pain (Scale 1-8)
+   - Coughing of Blood (Scale 1-8)
+   - Fatigue (Scale 1-8)
+   - Weight Loss (Scale 1-8)
+   - Shortness of Breath (Scale 1-8)
+   - Wheezing (Scale 1-8)
+   - Swallowing Difficulty (Scale 1-8)
+   - Clubbing of Finger Nails (Scale 1-8)
+   - Frequent Cold (Scale 1-8)
+   - Dry Cough (Scale 1-8)
+   - Snoring (Scale 1-8)
+   |
+   v
+4. SUBMIT FORM
+   |
+   v
+5. BACKEND PROCESSING
+   |
+   +----> Load Dataset (lungcancer.csv)
+   |
+   +----> Train Machine Learning Model (Logistic Regression)
+   |
+   +----> Make Prediction
+   |      - Positive (High Risk)
+   |      - Medium (Medium Risk)
+   |      - Negative (Low Risk)
+   |
+   +----> Calculate Insurance Premium
+   |      - Base premium amount
+   |      - Age factor
+   |      - Gender factor
+   |      - Diagnosis factor
+   |      - Risk factors (Smoking, Genetic Risk, etc.)
+   |      - Convert to Indian Rupees (₹)
+   |
+   +----> Generate Doctor Recommendation
+          - Based on diagnosis level
+          - Includes doctor name, specialty, hospital, contact
+   |
+   v
+6. DISPLAY RESULTS
+   |
+   +----> Show Diagnosis Result
+   |
+   +----> Show Insurance Premium (₹)
+   |
+   +----> Show Doctor Recommendation
+   |
+   v
+7. GENERATE PDF REPORT?
+   |
+   +----> NO ----> END
+   |
+   +----> YES
+          |
+          v
+8. CREATE PDF REPORT
+   |
+   +----> Include Patient Information
+   |
+   +----> Include Diagnosis Results
+   |
+   +----> Include Risk Factors Analysis
+   |
+   +----> Include Insurance Premium Details
+   |
+   +----> Include Premium Breakdown
+   |
+   +----> Include Doctor Recommendation
+   |
+   +----> Add Digital Signature
+   |
+   v
+9. DOWNLOAD PDF
+   |
+   v
+10. END

@@ -1,0 +1,54 @@
+```mermaid
+flowchart TD
+    Start([Start]) --> HomePage[Home Page]
+    HomePage --> Login{User Logged In?}
+    
+    Login -->|No| SignUp[Sign Up Page]
+    Login -->|No| SignIn[Sign In Page]
+    Login -->|Yes| PredictionForm[Prediction Form]
+    
+    SignUp --> CreateAccount[Create Account]
+    CreateAccount --> SignIn
+    SignIn --> Authenticate{Authentication}
+    Authenticate -->|Success| PredictionForm
+    Authenticate -->|Failure| SignIn
+    
+    PredictionForm --> SubmitForm[Submit Form]
+    SubmitForm --> ProcessData[Process Data]
+    
+    ProcessData --> TrainModel[Train ML Model]
+    TrainModel --> PredictRisk[Predict Lung Cancer Risk]
+    PredictRisk --> CalculatePremium[Calculate Insurance Premium]
+    CalculatePremium --> RecommendDoctor[Recommend Doctor]
+    
+    RecommendDoctor --> DisplayResults[Display Results]
+    DisplayResults --> GeneratePDF{Generate PDF?}
+    
+    GeneratePDF -->|Yes| CreatePDF[Create PDF Report]
+    CreatePDF --> DownloadPDF[Download PDF]
+    DownloadPDF --> End([End])
+    
+    GeneratePDF -->|No| End
+    
+    subgraph "User Authentication"
+        SignUp
+        SignIn
+        CreateAccount
+        Authenticate
+    end
+    
+    subgraph "Prediction Process"
+        ProcessData
+        TrainModel
+        PredictRisk
+        CalculatePremium
+        RecommendDoctor
+    end
+    
+    subgraph "Results & Reporting"
+        DisplayResults
+        GeneratePDF
+        CreatePDF
+        DownloadPDF
+    end
+```
