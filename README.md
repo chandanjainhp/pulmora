@@ -240,7 +240,7 @@ Contributions are welcome! Please follow these steps:
 
 ## 📞 Support
 
-For support, email your.email@example.com or open an issue in the repository.
+For support, email chandanjaincj93@gmail.com or open an issue in the repository.
 
 ## 🚧 Roadmap
 
