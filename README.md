@@ -1,6 +1,8 @@
-# Pulmora 
+# Pulmora
 
-
+Lung cancer risk prediction system with user accounts, insurance premium
+estimation, doctor recommendations and downloadable PDF reports — built with
+FastAPI, SQLAlchemy 2 and JWT authentication.
 
 ## What's inside
 
@@ -15,29 +17,29 @@ app/
   schemas/           Pydantic v2 request/response models
   services/
     ml_service.py    trains the LogisticRegression once at startup
-    premium.py       insurance premium calculation (ported verbatim)
-    doctors.py       doctor recommendation logic (ported verbatim)
+    premium.py       insurance premium calculation
+    doctors.py       doctor recommendation logic
     pipeline.py      orchestration: predict -> premium -> doctor -> persist
     pdf_report.py    WeasyPrint PDF generation from insurance_report.html
   routers/
     auth.py          POST /auth/register, POST /auth/login, GET /auth/me
     predict.py       POST /predict (rate-limited)
     reports.py       GET /reports, GET /reports/{id} (PDF)
-    pages.py         HTML pages under /pages/* (original templates)
-templates/           the original Django templates (Jinja2-adapted)
-static/              the original static assets (css/js/images/dataset)
+    pages.py         HTML pages under /pages/*
+templates/           Jinja2 HTML pages (landing, sign-in/up, prediction form, report)
+static/              static assets (css/js/images + training dataset)
 alembic/             migrations (initial schema included)
-scripts/             import_sqlite_data.py (Django db.sqlite3 -> new schema)
+scripts/             one-off SQLite user import helper
 tests/               pytest + httpx AsyncClient suite
 ```
 
 ## Requirements
 
-* Python 3.12+
-* For PDF generation, WeasyPrint needs system libraries
-  (`libpango`, `libcairo`, …): on Debian/Ubuntu
-  `sudo apt install libpango-1.0-0 libpangocairo-1.0-0 libcairo2 libgdk-pixbuf-2.0-0`,
-  on macOS `brew install pango`. (Everything else is pure pip.)
+- Python 3.12+
+- For PDF generation, WeasyPrint needs system libraries
+(`libpango`, `libcairo`, …): on Debian/Ubuntu
+`sudo apt install libpango-1.0-0 libpangocairo-1.0-0 libcairo2 libgdk-pixbuf-2.0-0`,
+on macOS `brew install pango`. (Everything else is pure pip.)
 
 ## Setup
 
@@ -57,36 +59,32 @@ cp .env.example .env                  # then edit SECRET_KEY at minimum
 # 4. database (SQLite by default; DATABASE_URL is configurable)
 alembic upgrade head
 
-# 5. (optional) import users from the original Django project
-python scripts/import_sqlite_data.py \
-    --source ../LungCancerPrediction-full-developer/db.sqlite3
-
-# 6. run
+# 5. run
 uvicorn app.main:app --reload
 ```
 
 Then open:
 
-| URL | What |
-| --- | --- |
-| http://127.0.0.1:8000/ | redirects to the home page |
-| http://127.0.0.1:8000/pages/home | landing page (original template) |
-| http://127.0.0.1:8000/pages/signin | browser sign-in |
-| http://127.0.0.1:8000/docs | interactive OpenAPI docs |
-| http://127.0.0.1:8000/health | liveness probe |
+| URL                                | What                  |
+| ---------------------------------- | --------------------- |
+| http://127.0.0.1:8000/             | redirects to the home page |
+| http://127.0.0.1:8000/pages/home   | landing page          |
+| http://127.0.0.1:8000/pages/signin | browser sign-in       |
+| http://127.0.0.1:8000/docs          | interactive OpenAPI docs |
+| http://127.0.0.1:8000/health       | liveness probe        |
 
 ## API summary
 
-| Method | Path | Auth | Description |
-| --- | --- | --- | --- |
-| POST | `/auth/register` | – | Create account (JSON) |
-| POST | `/auth/login` | – | OAuth2 password form → `{access_token}` |
-| GET | `/auth/me` | JWT | Current user |
-| POST | `/predict` | JWT | 22 features → risk class, probability, premium, doctors (rate-limited) |
-| GET | `/reports` | JWT | List your stored reports |
-| GET | `/reports/{prediction_id}` | JWT | PDF report (`application/pdf`) |
-| GET | `/health` | – | Liveness |
-| GET/POST | `/pages/*` | cookie | Original HTML UI |
+| Method   | Path                       | Auth   | Description                                                            |
+| -------- | -------------------------- | ------ | ---------------------------------------------------------------------- |
+| POST     | `/auth/register`           | –      | Create account (JSON)                                                  |
+| POST     | `/auth/login`              | –      | OAuth2 password form → `{access_token}`                                |
+| GET      | `/auth/me`                 | JWT    | Current user                                                           |
+| POST     | `/predict`                 | JWT    | 22 features → risk class, probability, premium, doctors (rate-limited) |
+| GET      | `/reports`                 | JWT    | List your stored reports                                               |
+| GET      | `/reports/{prediction_id}` | JWT    | PDF report (`application/pdf`)                                         |
+| GET      | `/health`                  | –      | Liveness                                                               |
+| GET/POST | `/pages/*`                 | cookie | HTML UI                                                                |
 
 ### Quick API example
 
@@ -122,23 +120,21 @@ environment variables or `.env` (see `.env.example`): `DATABASE_URL`
 `ACCESS_TOKEN_EXPIRE_MINUTES`, `DATASET_PATH`, `PREDICT_RATE_LIMIT`
 (slowapi syntax, default `10/minute`), `CORS_ORIGINS`, `INR_CONVERSION_RATE`.
 
-## Security notes (read MIGRATION_NOTES.md for the full picture)
+## Security notes
 
-* **Auth**: JWT (HS256) via `python-jose`; passwords bcrypt-hashed with
-  passlib. The browser pages use the same JWT in an `HttpOnly` +
-  `SameSite=Strict` cookie.
-* **CSRF-equivalent protection**: Django's per-form CSRF tokens are gone
-  because the API is token/header-authenticated. For the cookie-based HTML
-  flow, `SameSite=Strict` prevents cross-site form posts; additionally the
-  app only mutates state on `POST` endpoints that require the JWT cookie,
-  and JSON API calls require the `Authorization` header (which cross-site
-  forms cannot set). If you serve the UI from another origin, keep CORS
-  origins explicit in `CORS_ORIGINS`.
-* **Rate limiting**: `POST /predict` is limited to 10 requests/minute per IP
+- **Auth**: JWT (HS256) via `python-jose`; passwords bcrypt-hashed with
+passlib. The browser pages use the same JWT in an `HttpOnly` +
+`SameSite=Strict` cookie.
+- **CSRF protection**: JSON API calls require the `Authorization` header,
+  which cross-site forms cannot set. For the cookie-based HTML flow,
+  `SameSite=Strict` stops cross-site form posts from browsers, and state
+  changes only happen on authenticated `POST` endpoints. If you serve the
+  UI from another origin, keep CORS origins explicit in `CORS_ORIGINS`.
+- **Rate limiting**: `POST /predict` is limited to 10 requests/minute per IP
   (configurable via `PREDICT_RATE_LIMIT`).
-* **Validation**: all 22 inputs are validated server-side (age ≥ 1,
-  gender ∈ {1, 2}, symptom scales 1–8), matching the original HTML form.
-* **Report access**: `/reports/{id}` returns 404 (not 403) for other users'
+- **Validation**: all 22 inputs are validated server-side (age ≥ 1,
+  gender ∈ {1, 2}, symptom scales 1–8).
+- **Report access**: `/reports/{id}` returns 404 (not 403) for other users'
   reports so ids cannot be enumerated.
 
 ## Tests
@@ -148,13 +144,12 @@ pytest
 ```
 
 56 tests cover every endpoint (auth, predict, reports, pages, health),
-premium/doctor business-rule parity against the original code's outputs,
-input validation, rate limiting, and the Django user import.
+premium/doctor business rules, input validation, rate limiting, and the
+legacy user import.
 
 ## Model
 
 A `LogisticRegression` is trained at startup (FastAPI lifespan) on
-`static/dataset/lungcancer.csv` — same split (`test_size=0.25`,
-`random_state=1`) and same features as the original `views.py`, so
-predictions match the Django app. The original retrained on every request;
-this version trains once and holds the model in memory.
+`static/dataset/lungcancer.csv` using a fixed, deterministic split
+(`test_size=0.25`, `random_state=1`), then held in memory and reused for
+every request, so identical inputs always produce identical predictions.
