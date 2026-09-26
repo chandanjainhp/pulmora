@@ -1,259 +1,160 @@
-# 🫁 Lung Cancer Prediction System
+# Pulmora 
 
-A modern, responsive web application for predicting lung cancer risk based on various health parameters and symptoms. Built with Django and Machine Learning.
 
-![Python](https://img.shields.io/badge/python-3.12-blue.svg)
-![Django](https://img.shields.io/badge/django-3.0.5-green.svg)
-![Scikit-learn](https://img.shields.io/badge/scikit--learn-latest-orange.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-## 📋 Table of Contents
-- [Features](#features)
-- [Screenshots](#screenshots)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Mobile Responsive](#mobile-responsive)
-- [Contributing](#contributing)
-- [License](#license)
+## What's inside
 
-## ✨ Features
+```
+app/
+  main.py            FastAPI app: CORS, routers, /health, lifespan model load
+  core/config.py     Settings (pydantic-settings) with .env support
+  core/security.py   bcrypt hashing, JWT create/decode, auth dependency
+  core/rate_limit.py slowapi limiter (applied to POST /predict)
+  db/session.py      engine, SessionLocal, Base, get_db dependency
+  models/            SQLAlchemy ORM models (user, prediction)
+  schemas/           Pydantic v2 request/response models
+  services/
+    ml_service.py    trains the LogisticRegression once at startup
+    premium.py       insurance premium calculation (ported verbatim)
+    doctors.py       doctor recommendation logic (ported verbatim)
+    pipeline.py      orchestration: predict -> premium -> doctor -> persist
+    pdf_report.py    WeasyPrint PDF generation from insurance_report.html
+  routers/
+    auth.py          POST /auth/register, POST /auth/login, GET /auth/me
+    predict.py       POST /predict (rate-limited)
+    reports.py       GET /reports, GET /reports/{id} (PDF)
+    pages.py         HTML pages under /pages/* (original templates)
+templates/           the original Django templates (Jinja2-adapted)
+static/              the original static assets (css/js/images/dataset)
+alembic/             migrations (initial schema included)
+scripts/             import_sqlite_data.py (Django db.sqlite3 -> new schema)
+tests/               pytest + httpx AsyncClient suite
+```
 
-### 🎯 Core Features
-- **ML-Based Prediction**: Uses Logistic Regression to predict lung cancer risk
-- **User Authentication**: Secure sign up and sign in functionality
-- **Comprehensive Assessment**: 22+ health parameters evaluation
-- **Insurance Premium Calculation**: Automated premium calculation based on risk
-- **Doctor Recommendations**: Suggests appropriate specialists
-- **PDF Reports**: Generate detailed health reports
+## Requirements
 
-### 🎨 Modern UI/UX
-- **Fully Responsive Design**: Works seamlessly on all devices
-- **Interactive Forms**: Real-time validation and feedback
-- **Smooth Animations**: Modern transitions and effects
-- **Touch Optimized**: Mobile-friendly interactions
-- **Accessibility**: WCAG 2.1 compliant
+* Python 3.12+
+* For PDF generation, WeasyPrint needs system libraries
+  (`libpango`, `libcairo`, …): on Debian/Ubuntu
+  `sudo apt install libpango-1.0-0 libpangocairo-1.0-0 libcairo2 libgdk-pixbuf-2.0-0`,
+  on macOS `brew install pango`. (Everything else is pure pip.)
 
-### 📱 Mobile Responsive
-- Optimized for phones (360px+)
-- Tablet-friendly layouts
-- Desktop-enhanced features
-- Touch-friendly controls
-- Adaptive typography
+## Setup
 
-## 🖼️ Screenshots
-
-### Desktop View
-Home page with modern card design and responsive navigation.
-
-### Mobile View
-Fully responsive forms and optimized layouts for mobile devices.
-
-### Prediction Results
-Comprehensive results with diagnosis, insurance premium, and doctor recommendations.
-
-## 🛠️ Tech Stack
-
-### Backend
-- **Django 3.0.5** - Web framework
-- **Python 3.12** - Programming language
-- **SQLite** - Database
-- **Pandas** - Data manipulation
-- **NumPy** - Numerical computing
-- **Scikit-learn** - Machine learning
-
-### Frontend
-- **HTML5** - Markup
-- **CSS3** - Styling with responsive design
-- **JavaScript** - Interactive features
-- **Bootstrap 4** - CSS framework
-
-### ML Model
-- **Algorithm**: Logistic Regression
-- **Features**: 22 health parameters
-- **Accuracy**: Optimized for lung cancer prediction
-
-## 📦 Installation
-
-### Prerequisites
-- Python 3.12 or higher
-- pip (Python package manager)
-- Git
-
-### Steps
-
-1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/lung-cancer-prediction.git
-cd lung-cancer-prediction
+cd lung-cancer-fastapi
+
+# 1. virtual environment
+python3.12 -m venv .venv
+source .venv/bin/activate            # Windows: .venv\Scripts\activate
+
+# 2. dependencies
+pip install -r requirements.txt
+
+# 3. configuration (optional - sane dev defaults are built in)
+cp .env.example .env                  # then edit SECRET_KEY at minimum
+
+# 4. database (SQLite by default; DATABASE_URL is configurable)
+alembic upgrade head
+
+# 5. (optional) import users from the original Django project
+python scripts/import_sqlite_data.py \
+    --source ../LungCancerPrediction-full-developer/db.sqlite3
+
+# 6. run
+uvicorn app.main:app --reload
 ```
 
-2. **Create virtual environment**
+Then open:
+
+| URL | What |
+| --- | --- |
+| http://127.0.0.1:8000/ | redirects to the home page |
+| http://127.0.0.1:8000/pages/home | landing page (original template) |
+| http://127.0.0.1:8000/pages/signin | browser sign-in |
+| http://127.0.0.1:8000/docs | interactive OpenAPI docs |
+| http://127.0.0.1:8000/health | liveness probe |
+
+## API summary
+
+| Method | Path | Auth | Description |
+| --- | --- | --- | --- |
+| POST | `/auth/register` | – | Create account (JSON) |
+| POST | `/auth/login` | – | OAuth2 password form → `{access_token}` |
+| GET | `/auth/me` | JWT | Current user |
+| POST | `/predict` | JWT | 22 features → risk class, probability, premium, doctors (rate-limited) |
+| GET | `/reports` | JWT | List your stored reports |
+| GET | `/reports/{prediction_id}` | JWT | PDF report (`application/pdf`) |
+| GET | `/health` | – | Liveness |
+| GET/POST | `/pages/*` | cookie | Original HTML UI |
+
+### Quick API example
+
 ```bash
-python -m venv .venv
+# register
+curl -X POST http://127.0.0.1:8000/auth/register -H 'Content-Type: application/json' \
+  -d '{"first_name":"Jane","last_name":"Doe","username":"jane","email":"jane@example.com",
+       "password":"secret123","confirm_password":"secret123"}'
+
+# login (form-encoded)
+TOKEN=$(curl -s -X POST http://127.0.0.1:8000/auth/login \
+  -d 'username=jane&password=secret123' | python -c 'import sys,json;print(json.load(sys.stdin)["access_token"])')
+
+# predict
+curl -X POST http://127.0.0.1:8000/predict \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"age":55,"gender":1,"air_pollution":7,"alcohol_use":8,"dust_allergy":7,
+       "occupational_hazards":6,"genetic_risk":7,"chronic_lung_disease":6,
+       "balanced_diet":6,"obesity":7,"smoking":8,"passive_smoker":7,
+       "chest_pain":8,"coughing_of_blood":8,"fatigue":8,"weight_loss":7,
+       "shortness_of_breath":8,"wheezing":8,"swallowing_difficulty":7,
+       "clubbing_of_finger_nails":8,"frequent_cold":6,"dry_cough":7,"snoring":7}'
+
+# PDF report (use the id returned above)
+curl -OJ -H "Authorization: Bearer $TOKEN" http://127.0.0.1:8000/reports/1
 ```
 
-3. **Activate virtual environment**
+## Configuration
+
+All settings live in `app/core/config.py` and can be overridden via
+environment variables or `.env` (see `.env.example`): `DATABASE_URL`
+(default `sqlite:///./db.sqlite3`, any SQLAlchemy URL works), `SECRET_KEY`,
+`ACCESS_TOKEN_EXPIRE_MINUTES`, `DATASET_PATH`, `PREDICT_RATE_LIMIT`
+(slowapi syntax, default `10/minute`), `CORS_ORIGINS`, `INR_CONVERSION_RATE`.
+
+## Security notes (read MIGRATION_NOTES.md for the full picture)
+
+* **Auth**: JWT (HS256) via `python-jose`; passwords bcrypt-hashed with
+  passlib. The browser pages use the same JWT in an `HttpOnly` +
+  `SameSite=Strict` cookie.
+* **CSRF-equivalent protection**: Django's per-form CSRF tokens are gone
+  because the API is token/header-authenticated. For the cookie-based HTML
+  flow, `SameSite=Strict` prevents cross-site form posts; additionally the
+  app only mutates state on `POST` endpoints that require the JWT cookie,
+  and JSON API calls require the `Authorization` header (which cross-site
+  forms cannot set). If you serve the UI from another origin, keep CORS
+  origins explicit in `CORS_ORIGINS`.
+* **Rate limiting**: `POST /predict` is limited to 10 requests/minute per IP
+  (configurable via `PREDICT_RATE_LIMIT`).
+* **Validation**: all 22 inputs are validated server-side (age ≥ 1,
+  gender ∈ {1, 2}, symptom scales 1–8), matching the original HTML form.
+* **Report access**: `/reports/{id}` returns 404 (not 403) for other users'
+  reports so ids cannot be enumerated.
+
+## Tests
+
 ```bash
-# Windows
-.venv\Scripts\activate
-
-# macOS/Linux
-source .venv/bin/activate
+pytest
 ```
 
-4. **Install dependencies**
-```bash
-pip install django pandas numpy scikit-learn matplotlib seaborn xhtml2pdf PyPDF2
-```
+56 tests cover every endpoint (auth, predict, reports, pages, health),
+premium/doctor business-rule parity against the original code's outputs,
+input validation, rate limiting, and the Django user import.
 
-5. **Run migrations**
-```bash
-python manage.py migrate
-```
+## Model
 
-6. **Create superuser (optional)**
-```bash
-python manage.py createsuperuser
-```
-
-7. **Run the development server**
-```bash
-python manage.py runserver
-```
-
-8. **Open your browser**
-Navigate to `http://127.0.0.1:8000/`
-
-## 🚀 Usage
-
-### For Users
-
-1. **Sign Up**: Create a new account
-2. **Sign In**: Log in to your account
-3. **Fill the Form**: Enter your health parameters
-4. **Get Prediction**: View your lung cancer risk assessment
-5. **Download Report**: Generate PDF report with recommendations
-
-### For Developers
-
-#### Running Tests
-```bash
-python manage.py test
-```
-
-#### Collecting Static Files
-```bash
-python manage.py collectstatic
-```
-
-#### Database Inspection
-```bash
-python view_db.py
-```
-
-## 📁 Project Structure
-
-```
-intenship/
-├── Home/                      # Main Django app
-│   ├── views.py              # View logic
-│   ├── models.py             # Data models
-│   ├── urls.py               # URL routing
-│   └── admin.py              # Admin configuration
-├── LungCancerPrediction/     # Project settings
-│   ├── settings.py           # Django settings
-│   ├── urls.py               # Root URL configuration
-│   └── wsgi.py               # WSGI configuration
-├── templates/                 # HTML templates
-│   ├── home.html             # Landing page
-│   ├── signin.html           # Login page
-│   ├── signup.html           # Registration page
-│   └── predict.html          # Prediction form
-├── static/                    # Static files
-│   ├── dataset/              # ML dataset
-│   │   └── lungcancer.csv
-│   ├── styles/               # CSS files
-│   │   └── modern-enhancements.css
-│   └── js/                   # JavaScript files
-│       └── modern-features.js
-├── db.sqlite3                # Database
-├── manage.py                 # Django management script
-├── view_db.py               # Database viewer utility
-└── requirements.txt          # Python dependencies
-```
-
-## 📱 Mobile Responsive
-
-The application is fully responsive with breakpoints for:
-
-- **Mobile Phones**: 360px - 480px
-- **Large Phones**: 481px - 768px
-- **Tablets**: 769px - 1024px
-- **Desktop**: 1025px+
-
-### Responsive Features
-- Adaptive layouts
-- Touch-friendly buttons (44x44px minimum)
-- Optimized typography
-- Flexible grids
-- Mobile-first approach
-
-See [RESPONSIVE_DESIGN_GUIDE.md](RESPONSIVE_DESIGN_GUIDE.md) for detailed information.
-
-## 🎯 Health Parameters
-
-The prediction model evaluates:
-
-1. **Demographics**: Age, Gender
-2. **Environmental**: Air Pollution, Dust Allergy, Occupational Hazards
-3. **Lifestyle**: Smoking, Alcohol Use, Balanced Diet, Obesity
-4. **Medical History**: Genetic Risk, Chronic Lung Disease
-5. **Symptoms**: Chest Pain, Coughing Blood, Fatigue, Weight Loss, Shortness of Breath, Wheezing, etc.
-
-## 🔒 Security Features
-
-- CSRF protection
-- Password hashing
-- Form validation
-- SQL injection prevention
-- XSS protection
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-
-## 🙏 Acknowledgments
-
-- Dataset source: [Lung Cancer Dataset]
-- Django documentation
-- Scikit-learn community
-- Bootstrap framework
-
-## 📞 Support
-
-For support, email chandanjaincj93@gmail.com or open an issue in the repository.
-
-## 🚧 Roadmap
-
-- [ ] Add more ML models (Random Forest, SVM)
-- [ ] Implement model comparison
-- [ ] Add data visualization dashboard
-- [ ] Create REST API
-- [ ] Add email notifications
-- [ ] Implement dark mode
-- [ ] Add multi-language support
-- [ ] Create mobile app version
-
-
-**Made with ❤️ using Django and Machine Learning**
-
-⭐ Star this repository if you found it helpful!
+A `LogisticRegression` is trained at startup (FastAPI lifespan) on
+`static/dataset/lungcancer.csv` — same split (`test_size=0.25`,
+`random_state=1`) and same features as the original `views.py`, so
+predictions match the Django app. The original retrained on every request;
+this version trains once and holds the model in memory.

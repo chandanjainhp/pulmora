@@ -1,0 +1,351 @@
+/* =========================================================================
+   Pulmora — shared design system
+   Clean, modern medical/healthcare theme: blue + white, trustworthy.
+   Used across all server-rendered pages (not the PDF report, which is
+   self-contained for WeasyPrint compatibility).
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand */
+  --brand-900: #0B3B6F;
+  --brand-700: #0F4C8C;
+  --brand-600: #1568C1;
+  --brand-500: #2079D6;
+  --brand-100: #E8F1FC;
+  --brand-50:  #F4F9FE;
+  --accent-500: #0EA5A5;
+  --accent-100: #E3F7F5;
+
+  /* Neutrals */
+  --ink-900: #111C2A;
+  --ink-700: #33414F;
+  --ink-500: #5C6B7A;
+  --ink-300: #A6B3BF;
+  --line: #E2E8F0;
+  --bg: #F5F9FC;
+  --surface: #FFFFFF;
+
+  /* Status */
+  --success: #16A34A;
+  --success-bg: #E9F8EF;
+  --warning: #D97706;
+  --warning-bg: #FEF3E2;
+  --danger: #DC2626;
+  --danger-bg: #FDEAEA;
+
+  /* Metrics */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 1px 3px rgba(17, 28, 42, 0.06);
+  --shadow: 0 8px 24px rgba(15, 76, 140, 0.10);
+  --shadow-lg: 0 20px 45px rgba(15, 76, 140, 0.16);
+  --header-h: 72px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink-900);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: inherit; }
+
+img { max-width: 100%; }
+
+/* ---------- Layout ------------------------------------------------------ */
+
+.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: 64px 0;
+}
+
+/* ---------- Navbar -------------------------------------------------------*/
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: saturate(180%) blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.navbar-inner {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 21px;
+  letter-spacing: -0.02em;
+  color: var(--brand-700);
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--brand-600), var(--accent-500));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-mark svg { width: 19px; height: 19px; }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--ink-700);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-links a:hover { background: var(--brand-100); color: var(--brand-700); }
+
+.nav-links a.nav-cta {
+  background: var(--brand-600);
+  color: #fff;
+}
+
+.nav-links a.nav-cta:hover { background: var(--brand-700); }
+
+/* ---------- Buttons ------------------------------------------------------*/
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 26px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-block { width: 100%; }
+
+.btn-primary { background: var(--brand-600); color: #fff; box-shadow: var(--shadow-sm); }
+.btn-primary:hover { background: var(--brand-700); box-shadow: var(--shadow); }
+
+.btn-accent { background: var(--accent-500); color: #fff; }
+.btn-accent:hover { background: #0c8f8f; }
+
+.btn-outline { background: transparent; color: var(--brand-700); border: 1.5px solid var(--line); }
+.btn-outline:hover { border-color: var(--brand-600); background: var(--brand-50); }
+
+.btn-secondary { background: var(--ink-900); color: #fff; opacity: 0.85; }
+.btn-secondary:hover { opacity: 1; }
+
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #b91c1c; }
+
+.btn-lg { padding: 16px 32px; font-size: 17px; }
+
+/* ---------- Cards / surfaces ---------------------------------------------*/
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.card-pad { padding: 40px; }
+
+/* ---------- Forms ---------------------------------------------------------*/
+
+.form-group { margin-bottom: 22px; }
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--ink-700);
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 15.5px;
+  font-family: inherit;
+  color: var(--ink-900);
+  background: var(--surface);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--brand-600);
+  box-shadow: 0 0 0 4px var(--brand-100);
+}
+
+.radio-group { display: flex; gap: 12px; margin-top: 4px; }
+
+.radio-pill {
+  flex: 1;
+  position: relative;
+}
+
+.radio-pill input { position: absolute; opacity: 0; inset: 0; cursor: pointer; margin: 0; }
+
+.radio-pill span {
+  display: block;
+  text-align: center;
+  padding: 11px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink-700);
+  transition: all 0.15s ease;
+}
+
+.radio-pill input:checked + span {
+  border-color: var(--brand-600);
+  background: var(--brand-100);
+  color: var(--brand-700);
+}
+
+.range-container { display: flex; align-items: center; gap: 12px; }
+
+.range-input {
+  flex: 1;
+  accent-color: var(--brand-600);
+  height: 6px;
+}
+
+.range-value {
+  min-width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--brand-100);
+  color: var(--brand-700);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ---------- Alerts / badges ------------------------------------------------*/
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 14.5px;
+  margin-bottom: 20px;
+}
+
+.alert-error { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(220,38,38,0.2); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.badge-high, .badge-positive { background: var(--danger-bg); color: var(--danger); }
+.badge-medium { background: var(--warning-bg); color: var(--warning); }
+.badge-low, .badge-negative { background: var(--success-bg); color: var(--success); }
+
+/* ---------- Footer ---------------------------------------------------------*/
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 28px 0;
+  color: var(--ink-500);
+  font-size: 13.5px;
+  text-align: center;
+}
+
+.site-footer strong { color: var(--ink-700); }
+
+/* ---------- Utilities -------------------------------------------------------*/
+
+.text-center { text-align: center; }
+.muted { color: var(--ink-500); }
+.mt-0 { margin-top: 0; }
+.mb-0 { margin-bottom: 0; }
+
+/* ---------- Responsive ------------------------------------------------------*/
+
+@media (max-width: 860px) {
+  .section { padding: 44px 0; }
+  .card-pad { padding: 26px; }
+}
+
+@media (max-width: 640px) {
+  .nav-links a:not(.nav-cta):not(.nav-brand-link) { padding: 8px 10px; font-size: 14px; }
+  .brand { font-size: 18px; }
+  .card-pad { padding: 20px; }
+  .btn-lg { padding: 13px 22px; font-size: 15.5px; }
+}

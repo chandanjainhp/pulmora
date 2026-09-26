@@ -1,267 +1,130 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sign in to Lung Cancer Prediction System">
-    <title>Sign In - LC Prediction</title>
+    <meta name="description" content="Sign in to Pulmora — your lung health assessment account.">
+    <title>Sign In — Pulmora</title>
+    <link rel="stylesheet" href="{{ static('styles/theme.css') }}">
     <style>
-        body{
-            background-image: url("{%static 'images/lung-cancer-image.jpg' %}");
-            background-size: cover;
-            font-family: 'Arial', sans-serif;
+        .auth-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 920px;
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            overflow: hidden;
+        }
+        .auth-side {
+            background: linear-gradient(160deg, var(--brand-700), var(--brand-500));
+            color: #fff;
+            padding: 44px 38px;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-        }
-        ul{
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #2874A6; /* Blue navbar */
-            font-size: 25px;
-            letter-spacing: 1px;
-         }
-         li{
-            float: right;
-         }
-         li a{
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 16px 20px;
-            text-decoration: none;
-         }
-         li a:hover{
-            background-color: #1A5276;
-         }
-        li a:active{
-            background-color: rgb(20, 48, 204);
-         }
-
-         .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            padding: 20px;
-         }
-
-         .card {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            padding: 40px;
-            width: 80%;
-            max-width: 500px;
-         }
-
-         .form-title {
-            text-align: center;
-            color: #2874A6;
-            margin-bottom: 30px;
-            font-size: 32px;
-         }
-
-         .form-group {
-            margin-bottom: 25px;
-         }
-
-         .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #2874A6;
-            font-size: 18px;
-         }
-
-         .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #BDC3C7;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            box-sizing: border-box;
-         }
-
-         .form-control:focus {
-            border-color: #2874A6;
-            outline: none;
-            box-shadow: 0 0 5px rgba(40, 116, 166, 0.5);
-         }
-
-         .btn-container {
-            display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-         }
+        }
+        .auth-side .brand-mark { background: rgba(255,255,255,0.18); }
+        .auth-side h2 { font-size: 24px; line-height: 1.35; margin: 26px 0 14px; letter-spacing: -0.01em; }
+        .auth-side p { opacity: 0.9; font-size: 14.5px; line-height: 1.6; margin: 0; }
+        .auth-side ul { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+        .auth-side li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; opacity: 0.95; }
+        .auth-side li svg { width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; }
 
-         .btn-primary {
-            background-color: #2874A6;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            flex: 1;
-            margin-right: 10px;
-            transition: background-color 0.3s, transform 0.2s;
-         }
+        .auth-form { padding: 44px 40px; }
+        .auth-form h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -0.01em; }
+        .auth-form .sub { color: var(--ink-500); font-size: 14.5px; margin: 0 0 28px; }
 
-         .btn-secondary {
-            background-color: #7F8C8D;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            flex: 1;
-            margin-left: 10px;
-            transition: background-color 0.3s, transform 0.2s;
-         }
+        .btn-row { display: flex; gap: 12px; align-items: center; margin-top: 6px; }
+        .link-btn {
+            background: none; border: none; padding: 0; cursor: pointer;
+            color: var(--ink-500); font-weight: 600; font-size: 14px; font-family: inherit;
+        }
+        .link-btn:hover { color: var(--brand-600); }
 
-         .btn-primary:hover, .btn-secondary:hover {
-            transform: translateY(-2px);
-         }
+        .signup-link { text-align: center; margin-top: 26px; font-size: 14.5px; color: var(--ink-500); }
+        .signup-link a { color: var(--brand-600); font-weight: 700; text-decoration: none; }
+        .signup-link a:hover { text-decoration: underline; }
 
-         .btn-primary:hover {
-            background-color: #1A5276;
-         }
-
-         .btn-secondary:hover {
-            background-color: #616A6B;
-         }
-
-         .signup-link {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 16px;
-            color: #2C3E50;
-         }
-
-         .signup-link a {
-            color: #2874A6;
-            text-decoration: none;
-            font-weight: bold;
-         }
-
-         .signup-link a:hover {
-            text-decoration: underline;
-         }
-
-         mess{
-            text-align: center;
-            font-weight: bold;
-            color: #E74C3C;
-            font-size: 20px;
-            margin-bottom: 20px;
-            display: block;
-         }
-
-         /* Mobile Responsive Styles */
-         @media (max-width: 768px) {
-            ul {
-              font-size: 16px;
-            }
-            
-            li a {
-              padding: 12px 15px;
-            }
-            
-            .card {
-              width: 90%;
-              padding: 30px;
-            }
-            
-            .form-title {
-              font-size: 28px;
-            }
-            
-            .btn-container {
-              flex-direction: column;
-            }
-            
-            .btn-primary, .btn-secondary {
-              margin: 5px 0;
-            }
-         }
-
-         @media (max-width: 480px) {
-            ul {
-              font-size: 14px;
-            }
-            
-            li a {
-              padding: 10px 8px;
-            }
-            
-            .card {
-              width: 95%;
-              padding: 20px;
-            }
-            
-            .form-title {
-              font-size: 24px;
-            }
-            
-            .form-label {
-              font-size: 16px;
-            }
-            
-            .btn-primary, .btn-secondary {
-              font-size: 16px;
-              padding: 10px 20px;
-            }
-         }
+        @media (max-width: 760px) {
+            .auth-card { grid-template-columns: 1fr; }
+            .auth-side { display: none; }
+            .auth-form { padding: 32px 26px; }
+        }
     </style>
 </head>
 <body>
-<ul>
-    <li><a class="active" href="signup">Create an Account</a></li>
-    <li><a class="active" href="signin">Sign In</a></li>
-    <li style="float:left"><a href="home"><tit><b><i>LC Cancer Prediction</i></b></tit></a></li>
-</ul>
 
-<div class="container">
-    <div class="card">
-        <h2 class="form-title">Sign In</h2>
+<header class="navbar">
+    <div class="navbar-inner">
+        <a href="home" class="brand">
+            <span class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.5 3c-1 3-1.5 5-1.5 7.5C5 11 3 13.5 3 17c0 2.2 1.3 4 3.5 4 2.7 0 3.8-2.3 4-4.8.1-1.2.1-2.4 0-3.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M15.5 3c1 3 1.5 5 1.5 7.5 2 .5 4 3 4 6.5 0 2.2-1.3 4-3.5 4-2.7 0-3.8-2.3-4-4.8-.1-1.2-.1-2.4 0-3.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v9" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            Pulmora
+        </a>
+        <ul class="nav-links">
+            <li><a href="signup">Create an Account</a></li>
+        </ul>
+    </div>
+</header>
 
-        <mess>
-            {% for message in messages %}
-            <div>{{message}}</div>
-            {% endfor %}
-        </mess>
-
-        <form action="signin" method="post">
-            {% csrf_token %}
-
-            <div class="form-group">
-                <label for="username" class="form-label">Username :</label>
-                <input type="text" id="username" name="username" class="form-control" required>
+<div class="auth-wrap">
+    <div class="auth-card card">
+        <div class="auth-side">
+            <span class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.5 3c-1 3-1.5 5-1.5 7.5C5 11 3 13.5 3 17c0 2.2 1.3 4 3.5 4 2.7 0 3.8-2.3 4-4.8.1-1.2.1-2.4 0-3.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M15.5 3c1 3 1.5 5 1.5 7.5 2 .5 4 3 4 6.5 0 2.2-1.3 4-3.5 4-2.7 0-3.8-2.3-4-4.8-.1-1.2-.1-2.4 0-3.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v9" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <div>
+                <h2>Welcome back to your lung health dashboard</h2>
+                <p>Sign in to run a new assessment, generate a report, or review your previous results.</p>
+                <ul>
+                    <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Instant risk assessment</li>
+                    <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Personalized premium estimate</li>
+                    <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Downloadable PDF report</li>
+                </ul>
             </div>
+            <div></div>
+        </div>
 
-            <div class="form-group">
-                <label for="password" class="form-label">Password :</label>
-                <input type="password" id="password" name="password" class="form-control" required>
-            </div>
+        <div class="auth-form">
+            <h1>Sign In</h1>
+            <p class="sub">Enter your details to access your account.</p>
 
-            <div class="btn-container">
-                <button type="submit" class="btn-primary">Login</button>
-                <button type="button" class="btn-secondary">Forgot Password</button>
+            {% if messages %}
+            <div class="alert alert-error">
+                {% for message in messages %}<div>{{ message }}</div>{% endfor %}
             </div>
+            {% endif %}
 
-            <div class="signup-link">
-                Don't have an account? <a href="signup">Sign up</a>
-            </div>
-        </form>
+            <form action="signin" method="post">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name="username" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+
+                <div class="btn-row">
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </div>
+                <div class="text-center" style="margin-top:14px;">
+                    <button type="button" class="link-btn">Forgot Password?</button>
+                </div>
+
+                <div class="signup-link">
+                    Don't have an account? <a href="signup">Sign up</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

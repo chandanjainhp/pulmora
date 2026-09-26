@@ -1,228 +1,145 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create an account for Lung Cancer Prediction System">
-    <title>Sign Up - LC Prediction</title>
+    <meta name="description" content="Create your free Pulmora account and get an instant lung health risk assessment.">
+    <title>Create Account — Pulmora</title>
+    <link rel="stylesheet" href="{{ static('styles/theme.css') }}">
     <style>
-        body{
-            background-image: url("{%static 'images/lung-cancer-image.jpg' %}");
-            background-size: cover;
-            font-family: 'Arial', sans-serif;
+        .auth-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 980px;
+            display: grid;
+            grid-template-columns: 0.85fr 1.15fr;
+            overflow: hidden;
+        }
+        .auth-side {
+            background: linear-gradient(160deg, var(--brand-700), var(--brand-500));
+            color: #fff;
+            padding: 44px 38px;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
+            justify-content: space-between;
         }
-        ul{
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #2874A6; /* Blue navbar */
-            font-size: 25px;
-            letter-spacing: 1px;
-         }
-         li{
-            float: right;
-         }
-         li a{
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 16px 20px;
-            text-decoration: none;
-         }
-         li a:hover{
-            background-color: #1A5276;
-         }
-        li a:active{
-            background-color: rgb(20, 48, 204);
-         }
+        .auth-side .brand-mark { background: rgba(255,255,255,0.18); }
+        .auth-side h2 { font-size: 24px; line-height: 1.35; margin: 26px 0 14px; letter-spacing: -0.01em; }
+        .auth-side p { opacity: 0.9; font-size: 14.5px; line-height: 1.6; margin: 0; }
+        .auth-side ul { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+        .auth-side li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; opacity: 0.95; }
+        .auth-side li svg { width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; }
 
-         .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            padding: 20px;
-         }
+        .auth-form { padding: 44px 40px; }
+        .auth-form h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -0.01em; }
+        .auth-form .sub { color: var(--ink-500); font-size: 14.5px; margin: 0 0 26px; }
 
-         .card {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            padding: 40px;
-            width: 80%;
-            max-width: 600px;
-         }
+        .name-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 
-         .form-title {
-            text-align: center;
-            color: #2874A6;
-            margin-bottom: 30px;
-            font-size: 32px;
-         }
+        .signup-link { text-align: center; margin-top: 22px; font-size: 14.5px; color: var(--ink-500); }
+        .signup-link a { color: var(--brand-600); font-weight: 700; text-decoration: none; }
+        .signup-link a:hover { text-decoration: underline; }
 
-         .form-group {
-            margin-bottom: 25px;
-         }
-
-         .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #2874A6;
-            font-size: 18px;
-         }
-
-         .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #BDC3C7;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            box-sizing: border-box;
-         }
-
-         .form-control:focus {
-            border-color: #2874A6;
-            outline: none;
-            box-shadow: 0 0 5px rgba(40, 116, 166, 0.5);
-         }
-
-         .btn-submit {
-            background-color: #2874A6;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s, transform 0.2s;
-         }
-
-         .btn-submit:hover {
-            background-color: #1A5276;
-            transform: translateY(-2px);
-         }
-
-         mess{
-            text-align: center;
-            font-weight: bold;
-            color: #E74C3C;
-            font-size: 20px;
-            margin-bottom: 20px;
-            display: block;
-         }
-
-         /* Mobile Responsive Styles */
-         @media (max-width: 768px) {
-            ul {
-              font-size: 16px;
-            }
-            
-            li a {
-              padding: 12px 15px;
-            }
-            
-            .card {
-              width: 90%;
-              padding: 30px;
-            }
-            
-            .form-title {
-              font-size: 28px;
-            }
-         }
-
-         @media (max-width: 480px) {
-            ul {
-              font-size: 14px;
-            }
-            
-            li a {
-              padding: 10px 8px;
-            }
-            
-            .card {
-              width: 95%;
-              padding: 20px;
-            }
-            
-            .form-title {
-              font-size: 24px;
-            }
-            
-            .form-label {
-              font-size: 16px;
-            }
-            
-            .btn-submit {
-              font-size: 16px;
-              padding: 10px 20px;
-            }
-         }
+        @media (max-width: 760px) {
+            .auth-card { grid-template-columns: 1fr; }
+            .auth-side { display: none; }
+            .auth-form { padding: 32px 26px; }
+            .name-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-<ul>
-    <li><a class="active" href="signup">Create an Account</a></li>
-    <li><a class="active" href="signin">Sign In</a></li>
-    <li style="float:left"><a href="home"><tit><b><i>LC Cancer Prediction</i></b></tit></a></li>
-</ul>
 
-<div class="container">
-    <div class="card">
-        <h2 class="form-title">Create an Account</h2>
+<header class="navbar">
+    <div class="navbar-inner">
+        <a href="home" class="brand">
+            <span class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.5 3c-1 3-1.5 5-1.5 7.5C5 11 3 13.5 3 17c0 2.2 1.3 4 3.5 4 2.7 0 3.8-2.3 4-4.8.1-1.2.1-2.4 0-3.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M15.5 3c1 3 1.5 5 1.5 7.5 2 .5 4 3 4 6.5 0 2.2-1.3 4-3.5 4-2.7 0-3.8-2.3-4-4.8-.1-1.2-.1-2.4 0-3.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v9" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            Pulmora
+        </a>
+        <ul class="nav-links">
+            <li><a href="signin">Sign In</a></li>
+        </ul>
+    </div>
+</header>
 
-        <mess>
-            {% for message in messages %}
-            <div>{{message}}</div>
-            {% endfor %}
-        </mess>
-
-        <form action="signup" method="post">
-            {% csrf_token %}
-
-            <div class="form-group">
-                <label for="first_name" class="form-label">First Name :</label>
-                <input type="text" id="first_name" name="first_name" class="form-control" required>
+<div class="auth-wrap">
+    <div class="auth-card card">
+        <div class="auth-side">
+            <span class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.5 3c-1 3-1.5 5-1.5 7.5C5 11 3 13.5 3 17c0 2.2 1.3 4 3.5 4 2.7 0 3.8-2.3 4-4.8.1-1.2.1-2.4 0-3.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M15.5 3c1 3 1.5 5 1.5 7.5 2 .5 4 3 4 6.5 0 2.2-1.3 4-3.5 4-2.7 0-3.8-2.3-4-4.8-.1-1.2-.1-2.4 0-3.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3v9" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <div>
+                <h2>Get your free lung health assessment</h2>
+                <p>Create an account to answer a short questionnaire and instantly see your risk level, premium estimate and a matched specialist.</p>
+                <ul>
+                    <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Takes less than 2 minutes</li>
+                    <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>No credit card required</li>
+                    <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Your data stays private</li>
+                </ul>
             </div>
+            <div></div>
+        </div>
 
-            <div class="form-group">
-                <label for="last_name" class="form-label">Last Name :</label>
-                <input type="text" id="last_name" name="last_name" class="form-control" required>
+        <div class="auth-form">
+            <h1>Create Your Account</h1>
+            <p class="sub">Start your free lung health assessment in less than a minute.</p>
+
+            {% if messages %}
+            <div class="alert alert-error">
+                {% for message in messages %}<div>{{ message }}</div>{% endfor %}
             </div>
+            {% endif %}
 
-            <div class="form-group">
-                <label for="username" class="form-label">Username :</label>
-                <input type="text" id="username" name="username" class="form-control" required>
-            </div>
+            <form action="signup" method="post">
+                <div class="name-grid">
+                    <div class="form-group">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" required>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label for="email" class="form-label">Email :</label>
-                <input type="email" id="email" name="email" class="form-control" required>
-            </div>
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name="username" class="form-control" required>
+                </div>
 
-            <div class="form-group">
-                <label for="password1" class="form-label">Password :</label>
-                <input type="password" id="password1" name="password1" class="form-control" required>
-            </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
 
-            <div class="form-group">
-                <label for="password2" class="form-label">Re-Enter Password :</label>
-                <input type="password" id="password2" name="password2" class="form-control" required>
-            </div>
+                <div class="name-grid">
+                    <div class="form-group">
+                        <label for="password1" class="form-label">Password</label>
+                        <input type="password" id="password1" name="password1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password2" class="form-label">Re-Enter Password</label>
+                        <input type="password" id="password2" name="password2" class="form-control" required>
+                    </div>
+                </div>
 
-            <button type="submit" class="btn-submit">Sign Up</button>
-        </form>
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+
+                <div class="signup-link">
+                    Already have an account? <a href="signin">Sign in</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
 </body>
 </html>
